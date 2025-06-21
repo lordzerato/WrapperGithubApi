@@ -15,15 +15,6 @@ This project serves as a server component for the RepEx project (GitHub Reposito
 - **Uvicorn**: An ASGI server to run the FastAPI application.
 - **Cachetools**: A caching library used to store frequently requested data to optimize performance and reduce load on the GitHub API.
 
-## Available Endpoints
-
-Currently, the following endpoints are available:
-
-- `/repos`: Fetches repository information from GitHub.
-- `/user`: Fetches user information from GitHub.
-
-Both of these endpoints interact with the GitHub REST API and return the relevant data.
-
 ## Installation
 
 1. Clone the repository:
