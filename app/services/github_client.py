@@ -56,3 +56,28 @@ async def get_user_followers(username: str) -> list[Dict[str, Any]]:
             return response.json()
         return []
 
+async def get_search_users(q: str, p: int = 1, limit: int = 5) -> list[Dict[str, Any]]:
+    if (cache := repo_cache.get(f"search-user/{q}&page={p}&per_page={limit}")):
+        return cache
+    headers = {"Authorization": f"Bearer {GITHUB_TOKEN}"}
+    url = f"{GITHUB_API_URL}/search/users?q={q}+in%3Alogin+type%3Auser&page={p}&per_page={limit}&type=users"
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            repo_cache[f"search-user/{q}&page={p}&per_page={limit}"] = data
+            return data
+        return []
+
+async def get_search_repos(q: str, p: int = 1, limit: int = 5) -> list[Dict[str, Any]]:
+    if (cache := repo_cache.get(f"search-repos/{q}&page={p}&per_page={limit}")):
+        return cache
+    headers = {"Authorization": f"Bearer {GITHUB_TOKEN}"}
+    url = f"{GITHUB_API_URL}/search/repositories?q={q}&page={p}&per_page={limit}"
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            repo_cache[f"search-repos/{q}&page={p}&per_page={limit}"] = data
+            return data
+        return []
