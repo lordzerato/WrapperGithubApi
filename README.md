@@ -49,18 +49,21 @@ Both of these endpoints interact with the GitHub REST API and return the relevan
 
 ## Available Endpoints
 
-### `/repos`
-- Fetch GitHub repository data.
-
-### `/user`
-- Fetch GitHub user data.
+| Endpoint | Description |
+|----------|-------------|
+| `/repos/{user}/{repository}` | Retrieves detailed information about a specific repository owned by `{user}`. |
+| `/user/{user}` | Retrieves public profile details of the specified GitHub user. |
+| `/user/{user}/repos` | Retrieves all public repositories belonging to the specified user. |
+| `/user/{user}/followers` | Retrieves the list of followers for the specified user. |
+| `/search/users?q={user}&page={page}&per_page={limit}` | Searches for GitHub users based on a query string, with pagination support. |
+| `/search/repositories?q={query}&page={page}&per_page={limit}` | Searches for repositories matching the query string, with pagination options. |
 
 ## Usage Example
 
 Once the server is up and running, you can access the available endpoints:
 
-- Get repository data: `GET /repos`
-- Get user data: `GET /user`
+- Get repository data: `GET /repos/{user}/{repository}`
+- Get user data: `GET /user/{user}`
 
 ## Contributing
 
