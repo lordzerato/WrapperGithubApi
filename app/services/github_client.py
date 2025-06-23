@@ -61,9 +61,9 @@ async def get_user_followers(username: str) -> FollowersResponse:
     async with httpx.AsyncClient() as client:
         response = await client.get(url, headers=headers)
         data_json = response.json()
-        data = FollowersResponse.model_validate(data_json)
         if response.status_code != 200:
             raise GitHubAPIError(data_json["message"], response.status_code)
+        data = FollowersResponse.model_validate(data_json)
         repo_cache[f"{username}/followers"] = data
         return data
 
