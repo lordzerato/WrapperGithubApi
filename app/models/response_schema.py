@@ -1,7 +1,7 @@
 from pydantic import RootModel
 from typing import List
 from .user import User, Profile
-from .repository import Repository, RepositoryLong, RepositoryDetails
+from .repository import Repository, RepositoryDetails
 from .search import SearchUsers, SearchRepositories
 
 class ProfileResponse(Profile):
@@ -10,13 +10,7 @@ class ProfileResponse(Profile):
 class FollowersResponse(RootModel[List[User]]):
     pass
 
-class UserResponse(User):
-    pass
-
-class RepositoryResponse(Repository):
-    pass
-
-class RepositoryLongResponse(RepositoryLong):
+class RepositoriesResponse(RootModel[List[Repository]]):
     pass
 
 class RepositoryDetailsResponse(RepositoryDetails):
