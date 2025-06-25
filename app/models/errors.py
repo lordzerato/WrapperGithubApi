@@ -1,5 +1,14 @@
-class GitHubAPIError(Exception):
-    def __init__(self, message: str = "Unknown Error", status: int = 500):
-        self.message = message
-        self.status = status
-        super().__init__(message)
+from pydantic import BaseModel
+from typing import Any
+
+class GithubErrorRequest(BaseModel):
+    type: str
+    loc: Any
+    msg: str
+    input: Any
+
+class FormattedErrorRequest(BaseModel):
+    field: str
+    message: str
+    error_type: str
+    invalid_value: Any
