@@ -1,10 +1,19 @@
 # WrapperGithubApi
 
-WrapperGithubApi is a backend service designed to support the **RepEx - GitHub Repositories Explorer** project. The main goal of this API is to act as a wrapper around GitHub's REST API and hide the GitHub token to prevent its exposure to the client or frontend, ensuring a secure way to access GitHub data.
+WrapperGithubApi is a backend service designed to support the **RepEx - GitHub Repositories Explorer** project. This API acts as a secure wrapper around GitHub's REST and GraphQL APIs, hiding the GitHub token to prevent exposure on the frontend.
 
 ## Purpose
 
-This project serves as a server component for the RepEx project (GitHub Repositories Explorer), which can be found at [RepEx GitHub Repository](https://github.com/lordzerato/GitHub-repositories-explorer).
+This API acts as a secure wrapper around GitHub's REST and GraphQL APIs, hiding the GitHub token to prevent exposure on the frontend.
+
+## Key Features
+
+- Secure GitHub API access (REST & GraphQL)
+- Built with FastAPI + Uvicorn for high performance
+- Response time logging via middleware
+- OpenAPI and ReDoc auto-generated documentation at `/docs` and `/redoc`
+- Centralized error handler for consistent API responses
+- Built-in caching using `cachetools`
 
 ## Technologies Used
 
@@ -42,19 +51,40 @@ This project serves as a server component for the RepEx project (GitHub Reposito
 
 | Endpoint | Description |
 |----------|-------------|
-| `/repos/{user}/{repository}` | Retrieves detailed information about a specific repository owned by `{user}`. |
-| `/user/{user}` | Retrieves public profile details of the specified GitHub user. |
-| `/user/{user}/repos` | Retrieves all public repositories belonging to the specified user. |
-| `/user/{user}/followers` | Retrieves the list of followers for the specified user. |
-| `/search/users?q={user}&page={page}&per_page={limit}` | Searches for GitHub users based on a query string, with pagination support. |
-| `/search/repositories?q={query}&page={page}&per_page={limit}` | Searches for repositories matching the query string, with pagination options. |
+| `/repos/{user}/{repository}` | Fetch details of a specific GitHub repository. |
+| `/user/{user}` | Get public profile info of a GitHub user. |
+| `/user/{user}/repos` | Get all public repositories of a GitHub user. |
+| `/user/{user}/followers` | List followers of a GitHub user. |
+| `/search/users?q={user}&page={page}&per_page={limit}` | Search GitHub users. |
+| `/search/repositories?q={query}&page={page}&per_page={limit}` | Search repositories. |
+| `/graphql/query` (POST)                                        | Submit GraphQL queries to GitHub's GraphQL API.             |
+| `/graphql/searchUser` (POST)                                        | Search Github users with GraphQL API.             |
+
+> Interactive API documentation available at:
+> - Swagger UI: [`/docs`](http://localhost:8000/docs)
+> - ReDoc: [`/redoc`](http://localhost:8000/redoc)
 
 ## Usage Example
 
 Once the server is up and running, you can access the available endpoints:
 
-- Get repository data: `GET /repos/{user}/{repository}`
-- Get user data: `GET /user/{user}`
+- Get repository info:
+    ```http
+    GET /repos/octocat/Hello-World
+    ```
+- Get user data:
+    ```http
+    GET /user/octocat
+    ```
+- Query GraphQL:
+    ```http
+    POST /graphql/query
+    Content-Type: application/json
+    
+    {
+      "query": "{ viewer { login } }"
+    }
+    ```
 
 ## Contributing
 
