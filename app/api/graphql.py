@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException
+from typing import Dict, Any
 from app.services.github_client import graphql_search_users, graphql_request
 from app.models.graphql import PayloadGraphQL, PayloadSearch
+from app.models.response_schema import GraphQLSearchUsersResponse
 
-router = APIRouter(prefix="/graphql", tags=["graphql"])
+router = APIRouter()
 
-@router.post("/query")
+@router.post("/query", response_model=Dict[str, Any], include_in_schema=False)
 async def graphql_query(payload: PayloadGraphQL):
     query = payload.query
     variables = payload.variables
@@ -12,13 +14,9 @@ async def graphql_query(payload: PayloadGraphQL):
     if not query:
         raise HTTPException(status_code=400, detail="Missing GraphQL query")
 
-    try:
-        response = await graphql_request(query, variables)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    return response
+    return await graphql_request(query, variables)
 
-@router.post("/searchUser")
+@router.post("/searchUser", response_model=GraphQLSearchUsersResponse)
 async def search_user(payload: PayloadSearch):
     query = payload.query
     page = payload.page
@@ -26,11 +24,5 @@ async def search_user(payload: PayloadSearch):
 
     if not query:
         raise HTTPException(status_code=400, detail="Missing username")
-    
-    try:
-        response = await graphql_search_users(query, page, per_page)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    return response
 
-    
+    return await graphql_search_users(query, page, per_page)
