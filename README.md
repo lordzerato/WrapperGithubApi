@@ -4,7 +4,7 @@ WrapperGithubApi is a backend service designed to support the **RepEx - GitHub R
 
 ## Purpose
 
-This API acts as a secure wrapper around GitHub's REST and GraphQL APIs, hiding the GitHub token to prevent exposure on the frontend.
+This project serves as a secure intermediary layer for GitHub data access in the RepEx project ([GitHub Repository Explorer](https://github.com/lordzerato/GitHub-repositories-explorer)).
 
 ## Key Features
 
