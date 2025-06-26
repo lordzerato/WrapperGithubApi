@@ -1,8 +1,0 @@
-app = "wrapper-gh-actions-api"
-primary_region = "sin"
-
-[env]
-  PORT = "8080"
-
-[build]
-  dockerfile = "./Dockerfile"
