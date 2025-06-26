@@ -12,7 +12,7 @@ from app.models.response_schema import (
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/", include_in_schema=False)
 async def root():
     raise HTTPException(status_code=400, detail="Missing username parameter")
 
