@@ -11,9 +11,11 @@ This project serves as a secure intermediary layer for GitHub data access in the
 - Secure GitHub API access (REST & GraphQL)
 - Built with FastAPI + Uvicorn for high performance
 - Response time logging via middleware
-- OpenAPI and ReDoc auto-generated documentation at `/docs` and `/redoc`
 - Centralized error handler for consistent API responses
+- Rate limiting using SlowAPI to prevent abuse
+- Middleware integrations: CORS, GZip, HTTPS Redirect
 - Built-in caching using `cachetools`
+- OpenAPI and ReDoc auto-generated documentation at `/docs` and `/redoc`
 
 ## Technologies Used
 
