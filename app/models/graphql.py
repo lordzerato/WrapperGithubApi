@@ -1,7 +1,8 @@
 from pydantic import BaseModel
-from typing import Dict, Optional, List
+from typing import Optional, List
 
-type Variables = Optional[Dict[str, str | int | float | bool | None]]
+type AcceptedValue = str | int | float | bool | None
+type Variables = Optional[dict[str, AcceptedValue]]
 
 class PayloadGraphQL(BaseModel):
     query: str

@@ -1,7 +1,6 @@
 import httpx
 from fastapi import HTTPException
 from cachetools import TTLCache
-from typing import Dict, Any
 from app.core.config import GITHUB_TOKEN, GITHUB_API_URL
 from app.models.response_schema import (
     RepositoryDetailsResponse,
@@ -12,9 +11,9 @@ from app.models.response_schema import (
     SearchReposResponse,
     GraphQLSearchUsersResponse
 )
-from app.models.graphql import Variables
+from app.models.graphql import Variables, AcceptedValue
 
-# max 100 items & expired after 300s
+# max 500 items & expired after 5 minutes
 repo_cache: TTLCache[
     str,
     RepositoryDetailsResponse
@@ -24,8 +23,8 @@ repo_cache: TTLCache[
     | SearchUsersResponse
     | SearchReposResponse
     | GraphQLSearchUsersResponse
-] = TTLCache(maxsize=100, ttl=300)
-other_cache: TTLCache[str, Dict[str, Any]] = TTLCache(maxsize=100, ttl=300)
+] = TTLCache(maxsize=500, ttl=300)
+other_cache: TTLCache[str, dict[str, AcceptedValue]] = TTLCache(maxsize=500, ttl=300)
 
 async def get_repo_details(username: str, repo: str) -> RepositoryDetailsResponse:
     if cache := repo_cache.get(f"repos/{username}/{repo}"):
@@ -109,12 +108,12 @@ async def get_search_repos(q: str, p: int = 1, limit: int = 5) -> SearchReposRes
             repo_cache[f"search-repos/{q}&page={p}&per_page={limit}"] = data
         return data
 
-async def graphql_request(query: str, variables: Variables) -> Dict[str, Any]:
+async def graphql_request(query: str, variables: Variables) -> dict[str, AcceptedValue]:
     if cache := other_cache.get(f"graphql/{query}&{variables}"):
         return cache
     headers = {"Authorization": f"Bearer {GITHUB_TOKEN}"}
     url = f"{GITHUB_API_URL}/graphql"
-    payload: Dict[str, str | Variables] = {
+    payload: dict[str, str | Variables] = {
         "query": query,
         "variables": variables if variables else {}
     }
@@ -135,7 +134,7 @@ async def graphql_search_users(
     url = f"{GITHUB_API_URL}/graphql"
     query = "query SearchUsers($login: String!, $first: Int = 5, $after: String = null) { search(type: USER, query: $login, first: $first, after: $after) { userCount pageInfo { hasNextPage endCursor } edges { node { ... on User { login name avatarUrl bio company location url}}}}}"
     variables: Variables = {"login": username, "after": page, "first": per_page}
-    payload: Dict[str, str | Variables] = {"query": query, "variables": variables}
+    payload: dict[str, str | Variables] = {"query": query, "variables": variables}
     async with httpx.AsyncClient() as client:
         response = await client.post(url, json=payload, headers=headers)
         data_json = response.json()

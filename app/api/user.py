@@ -10,7 +10,7 @@ from app.models.response_schema import (
     FollowersResponse
 )
 
-router = APIRouter()
+router = APIRouter(prefix="/user", tags=["user"])
 
 @router.get("/", include_in_schema=False)
 async def root():
