@@ -5,20 +5,20 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 from slowapi.errors import RateLimitExceeded
-from app.models.errors import GithubErrorRequest, FormattedErrorRequest
+from app.models.errors import RawErrorValidation, FormattedErrorValidation
 from app.core.logger import logger
 
 def reformat_error(
     exc: ValidationError | RequestValidationError, isValidation: bool = False
-) -> List[FormattedErrorRequest]:
-    errors: List[GithubErrorRequest] = [
-        GithubErrorRequest.model_validate(error) for error in exc.errors()
+) -> List[FormattedErrorValidation]:
+    errors: List[RawErrorValidation] = [
+        RawErrorValidation.model_validate(error) for error in exc.errors()
     ]
-    formatted_errors: List[FormattedErrorRequest] = []
+    formatted_errors: List[FormattedErrorValidation] = []
 
     for error in errors:
         invalid_value = error.input.get("message") if isinstance(error.input, dict) else error.input
-        formatted_error: FormattedErrorRequest = FormattedErrorRequest.model_validate(
+        formatted_error: FormattedErrorValidation = FormattedErrorValidation.model_validate(
             {
                 "field": list(error.loc or ("Unknown error", ""))[::1 if isValidation else -1][0],
                 "message": error.msg or "Unknown error",
@@ -43,7 +43,7 @@ def add_exception_handler(app: FastAPI):
     @app.exception_handler(HTTPException)
     async def http_exception_handler(
         request: Request, exc: HTTPException
-    ) -> JSONResponse: 
+    ) -> JSONResponse:
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
     @app.exception_handler(ValidationError)

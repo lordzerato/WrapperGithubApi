@@ -2,13 +2,13 @@ from pydantic import BaseModel
 from typing import Any
 from app.models.graphql import AcceptedValue
 
-class GithubErrorRequest(BaseModel):
+class RawErrorValidation(BaseModel):
     type: str
     loc: Any
     msg: str
     input: AcceptedValue | dict[str, Any]
 
-class FormattedErrorRequest(BaseModel):
+class FormattedErrorValidation(BaseModel):
     field: str
     message: str
     error_type: str
