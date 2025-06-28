@@ -36,7 +36,7 @@ class CustomHTTPSRedirectMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
         else:
             if request.url.scheme != "https":
-                return RedirectResponse(url=request.url.replace(scheme="https"))
+                # return RedirectResponse(url=request.url.replace(scheme="https"))
             response = await call_next(request)
         
         return response
