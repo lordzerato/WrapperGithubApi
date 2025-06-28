@@ -25,29 +25,51 @@ This project serves as a secure intermediary layer for GitHub data access in the
 - **python-dotenv**: A library to load environment variables from a `.env` file, ensuring that sensitive data (like GitHub tokens) remains secure.
 - **Uvicorn**: An ASGI server to run the FastAPI application.
 - **Cachetools**: A caching library used to store frequently requested data to optimize performance and reduce load on the GitHub API.
+- **SlowAPI**: A FastAPI-compatible rate limiter used to prevent API abuse by restricting the number of requests per client.
 
 ## Installation
 
-1. Clone the repository:
+1. Check if Python is installed
+
+    You can verify by running:
+    ```bash
+    python --version
+    ```
+    > If Python is not installed, download and install it from the official website: https://www.python.org/downloads/
+   
+2. Clone the repository
     ```bash
     git clone https://github.com/yourusername/WrapperGithubApi.git
     cd WrapperGithubApi
     ```
 
-2. Install the required dependencies:
+3. (Optional) Create a virtual environment
+
+    It’s recommended to use a virtual environment to isolate project dependencies:
+    ```bash
+    python -m venv venv
+    source venv/bin/activate   # On Windows: venv\Scripts\activate
+    ```
+
+4. Install the required dependencies
     ```bash
     pip install -r requirements.txt
     ```
 
-3. Set up environment variables by creating a `.env` file in the project root, based on the provided `.env.example`:
+5. Set up environment variables
+
+    Create a `.env` file in the project root directory based on the provided `.env.example`:
     ```env
     AUTH_TOKEN=your_github_token
     ```
 
-4. Run the application:
+6. Run the application
+
+    Start the FastAPI app using Uvicorn:
     ```bash
     uvicorn app.main:app --reload
     ```
+    > The server will be available at: http://localhost:8000
 
 ## Available Endpoints
 
