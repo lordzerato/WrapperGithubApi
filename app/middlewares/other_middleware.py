@@ -35,7 +35,7 @@ class CustomHTTPSRedirectMiddleware(BaseHTTPMiddleware):
         if client_host == "127.0.0.1" or client_host == "localhost":
             response = await call_next(request)
         else:
-            if request.url.scheme != "https":
+            # if request.url.scheme != "https":
                 # return RedirectResponse(url=request.url.replace(scheme="https"))
             response = await call_next(request)
         
