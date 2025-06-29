@@ -2,10 +2,10 @@ import time
 from fastapi import Request
 from fastapi.responses import Response
 from starlette.types import ASGIApp
-# from starlette.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from typing import Callable, Awaitable, Any
 from app.core.logger import logger
+from app.core.config import settings
 
 class ResponseTimeMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp, *args: Any, **kwargs: Any):
@@ -23,20 +23,19 @@ class ResponseTimeMiddleware(BaseHTTPMiddleware):
         )
         return response
 
-class CustomHTTPSRedirectMiddleware(BaseHTTPMiddleware):
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     def __init__(self, app: ASGIApp, *args: Any, **kwargs: Any):
         super().__init__(app, *args, **kwargs)
 
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
-        client_host = request.client.host if request.client else None
-        
-        if client_host == "127.0.0.1" or client_host == "localhost":
-            response = await call_next(request)
-        else:
-            # if request.url.scheme != "https":
-                # return RedirectResponse(url=request.url.replace(scheme="https"))
-            response = await call_next(request)
-        
+        response: Response = await call_next(request)
+        # to avoid Clickjacking, XSS, insecure redirects
+        response.headers["Content-Security-Policy"] = settings.CSP
+        response.headers["Strict-Transport-Security"] = settings.STRICT_TRANSPORT_SECURITY
+        response.headers["Permissions-Policy"] = settings.PERMISSION_POLICY
+        response.headers["Referrer-Policy"] = settings.REFERRER_POLICY
+        response.headers["X-Content-Type-Options"] = settings.X_CONTENT_TYPE_OPTIONS
+        response.headers["X-Frame-Options"] = settings.X_FRAME_OPTIONS
         return response
