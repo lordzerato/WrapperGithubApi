@@ -5,4 +5,4 @@ uvicorn
 pydantic
 cachetools
 slowapi
-secure
+pydantic_settings
