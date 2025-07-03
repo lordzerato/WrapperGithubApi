@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 from slowapi.errors import RateLimitExceeded
-from app.models.errors import RawErrorValidation, FormattedErrorValidation
+from app.models.error import RawErrorValidation, FormattedErrorValidation
 from app.core.logger import logger
 
 def reformat_error(
@@ -17,10 +17,12 @@ def reformat_error(
     formatted_errors: List[FormattedErrorValidation] = []
 
     for error in errors:
+        loc = list(error.loc or ("Unknown error", ""))[::1 if isValidation else -1]
+        indexLoc = 1 if isinstance(loc[0], int) else 0
         invalid_value = error.input.get("message") if isinstance(error.input, dict) else error.input
         formatted_error: FormattedErrorValidation = FormattedErrorValidation.model_validate(
             {
-                "field": list(error.loc or ("Unknown error", ""))[::1 if isValidation else -1][0],
+                "field": loc[indexLoc],
                 "message": error.msg or "Unknown error",
                 "error_type": error.type or "Unknown",
                 "invalid_value": invalid_value

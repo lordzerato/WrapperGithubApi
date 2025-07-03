@@ -36,3 +36,23 @@ class Profile(User):
     public_repos: int
     twitter_username: str | None
     updated_at: str
+
+class Contributors(User):
+    contributions: int
+
+class Team(BaseModel):
+    id: int
+    node_id: str
+    url: str
+    html_url: str
+    name: str
+    slug: str
+    description: str | None
+    privacy: str
+    notification_setting: str
+    permission: str
+    members_url: str
+    repositories_url: str
+
+class Organisation(Team):
+    parent: None | Team

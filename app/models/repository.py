@@ -9,13 +9,58 @@ class License(BaseModel):
     spdx_id: str
     url: str
 
-class Repository(BaseModel):
+class BaseRepository(BaseModel):
     description: str | None
     full_name: str
     html_url: str
     id: int
     name: str
+
+class Repository(BaseRepository):
     stargazers_count: int
+
+class RepositoryPublic(BaseRepository):
+    archive_url: str
+    assignees_url: str
+    blobs_url: str
+    branches_url: str
+    collaborators_url: str
+    comments_url: str
+    commits_url: str
+    compare_url: str
+    contents_url: str
+    contributors_url: str
+    deployments_url: str
+    downloads_url: str
+    events_url: str
+    fork: bool
+    forks_url: str
+    git_commits_url: str
+    git_tags_url: str
+    git_refs_url: str
+    hooks_url: str
+    issue_comment_url: str
+    issue_events_url: str
+    issues_url: str
+    keys_url: str
+    labels_url: str
+    languages_url: str
+    merges_url: str
+    milestones_url: str
+    node_id: str
+    notifications_url: str
+    owner: User
+    private: bool
+    pulls_url: str
+    releases_url: str
+    stargazers_url: str
+    statuses_url: str
+    subscribers_url: str
+    subscription_url: str
+    tags_url: str
+    teams_url: str
+    trees_url: str
+    url: str
 
 class RepositoryLong(Repository):
     allow_forking: bool
@@ -92,9 +137,6 @@ class RepositoryLong(Repository):
     watchers_count: int
     web_commit_signoff_required: bool
 
-    class Config:
-        from_attributes = True
-
 class Permissions(BaseModel):
     admin: bool
     maintain: bool
@@ -103,6 +145,33 @@ class Permissions(BaseModel):
     pull: bool
 
 class RepositoryDetails(RepositoryLong):
+    parent: RepositoryLong | None
+    source: RepositoryLong | None
     network_count: int
-    permissions: Permissions
+    # permissions: Permissions
+    temp_clone_token: str | None = None
     subscribers_count: int
+
+class RepositoryActivity(BaseModel):
+    activity_type: str
+    actor: User
+    after: str
+    before: str
+    id: int
+    node_id: str
+    ref: str
+    timestamp: str
+
+class Integration(BaseModel):
+    created_at: str
+    description: str
+    external_url: str
+    events: List[str]
+    html_url: str
+    id: int
+    name: str
+    node_id: str
+    owner: User
+    permissions: Permissions
+    slug: str
+    updated_at: str

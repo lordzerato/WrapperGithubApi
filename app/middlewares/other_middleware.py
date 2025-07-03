@@ -32,10 +32,6 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     ) -> Response:
         response: Response = await call_next(request)
         # to avoid Clickjacking, XSS, insecure redirects
-        response.headers["Content-Security-Policy"] = settings.CSP
-        response.headers["Strict-Transport-Security"] = settings.STRICT_TRANSPORT_SECURITY
-        response.headers["Permissions-Policy"] = settings.PERMISSION_POLICY
-        response.headers["Referrer-Policy"] = settings.REFERRER_POLICY
-        response.headers["X-Content-Type-Options"] = settings.X_CONTENT_TYPE_OPTIONS
-        response.headers["X-Frame-Options"] = settings.X_FRAME_OPTIONS
+        for key, value in settings.headers.items():
+            response.headers[key] = value
         return response
