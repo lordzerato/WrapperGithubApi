@@ -6,7 +6,7 @@ from app.models.response_schema import GraphQLSearchUsersResponse
 
 router = APIRouter(prefix="/graphql", tags=["graphql"])
 
-@router.post("/query", response_model=dict[str, Any], include_in_schema=False)
+@router.post("/query", response_model=dict[str, Any])
 async def graphql_query(payload: PayloadGraphQL):
     query = payload.query
     variables = payload.variables
