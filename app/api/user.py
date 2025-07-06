@@ -1,14 +1,18 @@
 from fastapi import APIRouter, HTTPException
 from typing import Literal
-from app.services.github_client import (
+from app.services.github_client.users import (
     get_user_details,
     get_user_repos,
-    get_user_followers
+    get_user_followers,
+    get_user_starred,
+    get_user_public_event
 )
 from app.models.response_schema import (
-    ProfileResponse,
+    UsersDetailsResponse,
     UsersRepositoriesResponse,
-    FollowersResponse
+    UsersFollowersResponse,
+    UsersStarredResponse,
+    UsersPublicEventsResponse
 )
 from app.utils.utils import join_query_params
 
@@ -18,11 +22,15 @@ router = APIRouter(prefix="/user", tags=["user"])
 async def root():
     raise HTTPException(status_code=400, detail="Missing username parameter")
 
-@router.get("/{username}", response_model=ProfileResponse)
+@router.get("s/", include_in_schema=False)
+async def root_users():
+    raise HTTPException(status_code=400, detail="Missing username parameter")
+
+@router.get("s/{username}", response_model=UsersDetailsResponse)
 async def user_info(username: str):
     return await get_user_details(username)
 
-@router.get("/{username}/repos", response_model=UsersRepositoriesResponse)
+@router.get("s/{username}/repos", response_model=UsersRepositoriesResponse)
 async def user_repos(
     username: str,
     type: Literal["all", "owner", "member"] = "owner",
@@ -41,7 +49,17 @@ async def user_repos(
     print(query_params)
     return await get_user_repos(username, query_params)
 
-@router.get("/{username}/followers", response_model=FollowersResponse)
+@router.get("s/{username}/followers", response_model=UsersFollowersResponse)
 async def user_followers(username: str, page: int = 1, per_page: int = 30):
     query_params: str = join_query_params({"page": page, "per_page": per_page})
     return await get_user_followers(username, query_params)
+
+@router.get("s/{username}/starred", response_model=UsersStarredResponse)
+async def user_starred(username: str, page: int = 1, per_page: int = 30):
+    query_params: str = join_query_params({"page": page, "per_page": per_page})
+    return await get_user_starred(username, query_params)
+
+@router.get("s/{username}/events/public", response_model=UsersPublicEventsResponse)
+async def user_public_event(username: str, page: int = 1, per_page: int = 30):
+    query_params: str = join_query_params({"page": page, "per_page": per_page})
+    return await get_user_public_event(username, query_params)

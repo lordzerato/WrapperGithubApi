@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import List
 from .user import User
 
 class License(BaseModel):
@@ -7,6 +6,14 @@ class License(BaseModel):
     name: str
     node_id: str
     spdx_id: str
+    url: str
+
+class Topics(BaseModel):
+    names: list[str]
+
+class ShortRepository(BaseModel):
+    id: int
+    name: str
     url: str
 
 class BaseRepository(BaseModel):
@@ -128,7 +135,7 @@ class RepositoryLong(Repository):
     svn_url: str
     tags_url: str
     teams_url: str
-    topics: List[str] = []
+    topics: list[str] = []
     trees_url: str
     updated_at: str
     url: str
@@ -145,12 +152,14 @@ class Permissions(BaseModel):
     pull: bool
 
 class RepositoryDetails(RepositoryLong):
-    parent: RepositoryLong | None
-    source: RepositoryLong | None
     network_count: int
-    # permissions: Permissions
     temp_clone_token: str | None = None
     subscribers_count: int
+    # The following properties were present during earlier stages of development,
+    # but are no longer available—likely due to changes in the API/version.
+    # parent: RepositoryLong | None
+    # source: RepositoryLong | None
+    # permissions: Permissions
 
 class RepositoryActivity(BaseModel):
     activity_type: str
@@ -166,7 +175,7 @@ class Integration(BaseModel):
     created_at: str
     description: str
     external_url: str
-    events: List[str]
+    events: list[str]
     html_url: str
     id: int
     name: str

@@ -1,22 +1,22 @@
 import re
-from typing import Optional, List, Literal, Dict
+from typing import Literal
 from pydantic import field_validator, AnyHttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 pattern = r"^(?!0)\d+/(second|minute|hour|day|month|year)$"
-type_methods: List[str] = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
-props_headers: List[str] = ["CSP", "STRICT_TRANSPORT_SECURITY", "PERMISSION_POLICY", "REFERRER_POLICY", "X_CONTENT_TYPE_OPTIONS", "X_FRAME_OPTIONS"]
-required_csp: List[str] = ["default-src", "script-src", "style-src", "img-src", "font-src", "worker-src", "connect-src"]
+type_methods: list[str] = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+props_headers: list[str] = ["CSP", "STRICT_TRANSPORT_SECURITY", "PERMISSION_POLICY", "REFERRER_POLICY", "X_CONTENT_TYPE_OPTIONS", "X_FRAME_OPTIONS"]
+required_csp: list[str] = ["default-src", "script-src", "style-src", "img-src", "font-src", "worker-src", "connect-src"]
 
 class Settings(BaseSettings):
     # GithubAPI
-    AUTH_TOKEN: Optional[str] = None
+    AUTH_TOKEN: str | None = None
     GITHUB_API_URL: AnyHttpUrl = AnyHttpUrl("https://api.github.com/")
 
     # Middleware
-    ALLOW_ORIGINS: List[str] = ["*"]
-    ALLOW_METHODS: List[str] = ["GET", "POST"]
-    ALLOWED_HOSTS: List[str] = [
+    ALLOW_ORIGINS: list[str] = ["*"]
+    ALLOW_METHODS: list[str] = ["GET", "POST"]
+    ALLOWED_HOSTS: list[str] = [
         "wrappergithubapi-production.up.railway.app",
         "localhost",
         "127.0.0.1"
@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     GZIP_COMPRESS_LEVEL: int = 7
 
     # Headers
-    headers: Dict[str, str] = {
+    headers: dict[str, str] = {
         "CSP": (
             "default-src 'self'; "
             "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; "
@@ -49,7 +49,7 @@ class Settings(BaseSettings):
 
     @field_validator("ALLOW_METHODS")
     @classmethod
-    def validate_allow_methods(cls, value: List[str]) -> List[str]:
+    def validate_allow_methods(cls, value: list[str]) -> list[str]:
         for method in value:
             if method not in type_methods:
                 raise ValueError(f"Invalid method: {method}")
@@ -71,7 +71,7 @@ class Settings(BaseSettings):
 
     @field_validator("headers")
     @classmethod
-    def validate_headers(cls, value: Dict[str, str]) -> Dict[str, str]:
+    def validate_headers(cls, value: dict[str, str]) -> dict[str, str]:
         for key, val in value.items():
             if key not in props_headers:
                 raise ValueError(f"Invalid header key: {key}")

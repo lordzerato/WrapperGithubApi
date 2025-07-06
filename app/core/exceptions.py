@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -10,11 +9,11 @@ from app.core.logger import logger
 
 def reformat_error(
     exc: ValidationError | RequestValidationError, isValidation: bool = False
-) -> List[FormattedErrorValidation]:
-    errors: List[RawErrorValidation] = [
+) -> list[FormattedErrorValidation]:
+    errors: list[RawErrorValidation] = [
         RawErrorValidation.model_validate(error) for error in exc.errors()
     ]
-    formatted_errors: List[FormattedErrorValidation] = []
+    formatted_errors: list[FormattedErrorValidation] = []
 
     for error in errors:
         loc = list(error.loc or ("Unknown error", ""))[::1 if isValidation else -1]

@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
-from .user import User, Organisation
+from .user import User, Organisation, Author
 from .repository import Integration, RepositoryLong
 
 class CommitRefference(BaseModel):
@@ -31,10 +30,17 @@ class Reactions(BaseModel):
     total_count: int
     url: str
 
+class ShortCommit(BaseModel):
+    author: Author | None
+    distinct: bool
+    message: str
+    sha: str
+    url: str
+
 class Commit(BaseModel):
     active_lock_reason: str | None
     assignee: User | None
-    assignees: List[User] = []
+    assignees: list[User] = []
     author_association: str
     body: str | None
     closed_at: str | None
@@ -43,7 +49,7 @@ class Commit(BaseModel):
     draft: bool
     html_url: str
     id: int
-    labels: List[str] = []
+    labels: list[str] = []
     locked: bool
     milestone: str | int | None
     node_id: str
@@ -65,6 +71,16 @@ class Issue(Commit):
     repository_url: str
     timeline_url: str
     state_reason: str | None
+
+class Payload(BaseModel):
+    before: str
+    commits: list[ShortCommit] = []
+    distinct_size: int
+    head: str
+    push_id: int
+    ref: str
+    repository_id: int
+    size: int
 
 class BaseRefference(BaseModel):
     label: str
@@ -92,8 +108,8 @@ class Pull(Commit):
     issue_url: str
     merged_at: None
     merge_commit_sha: str
-    requested_reviewers: List[User] = []
-    requested_teams: List[Organisation] = []
+    requested_reviewers: list[User] = []
+    requested_teams: list[Organisation] = []
     commits_url: str
     review_comments_url: str
     review_comment_url: str
@@ -102,3 +118,17 @@ class Pull(Commit):
     base: BaseRefference
     links: Links | None = Field(None, alias="_links")
     auto_merge: None
+
+class ReadMe(BaseModel):
+    content: str
+    download_url: str
+    encoding: str
+    git_url: str
+    html_url: str
+    links: dict[str, str] | None = Field(None, alias="_links")
+    name: str
+    path: str
+    sha: str
+    size: int
+    type: str
+    url: str

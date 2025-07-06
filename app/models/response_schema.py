@@ -1,48 +1,66 @@
 from pydantic import RootModel
-from typing import List, Dict
 from .user import User, Profile, Contributors
-from .repository import RepositoryDetails, RepositoryActivity, RepositoryPublic, RepositoryLong
+from .repository import (
+    RepositoryDetails,
+    RepositoryActivity,
+    RepositoryPublic,
+    RepositoryLong,
+    Topics
+)
 from .search import SearchUsers, SearchRepositories
-from .graphql import GraphQLSearchUsers
-from .commit import Branch, Issue, Pull
+from .graphql import GraphQLSearchUsers, GraphQLData
+from .commit import Branch, Issue, Pull, ReadMe
+from .event import Event
 
-class ProfileResponse(Profile):
+class UsersDetailsResponse(Profile):
     pass
 
-class FollowersResponse(RootModel[List[User]]):
+class UsersRepositoriesResponse(RootModel[list[RepositoryLong]]):
     pass
 
-class RepositoriesResponse(RootModel[List[RepositoryPublic]]):
+class UsersFollowersResponse(RootModel[list[User]]):
     pass
 
-class UsersRepositoriesResponse(RootModel[List[RepositoryLong]]):
+class UsersStarredResponse(RootModel[list[RepositoryLong]]):
+    pass
+
+class UsersPublicEventsResponse(RootModel[list[Event]]):
+    pass
+
+class RepositoriesResponse(RootModel[list[RepositoryPublic]]):
     pass
 
 class RepositoryDetailsResponse(RepositoryDetails):
     pass
 
-class RepositoryActivityResponse(RootModel[List[RepositoryActivity]]):
+class RepositoryActivityResponse(RootModel[list[RepositoryActivity]]):
     pass
 
-class RepositoryContributorsResponse(RootModel[List[Contributors]]):
+class RepositoryContributorsResponse(RootModel[list[Contributors]]):
     pass
 
-class RepositoryBranchesResponse(RootModel[List[Branch]]):
+class RepositoryBranchesResponse(RootModel[list[Branch]]):
     pass
 
-class RepositoryIssuesResponse(RootModel[List[Issue]]):
+class RepositoryIssuesResponse(RootModel[list[Issue]]):
     pass
 
-class RepositoryPullsResponse(RootModel[List[Pull]]):
+class RepositoryPullsResponse(RootModel[list[Pull]]):
     pass
 
-class RepositorySubscribersResponse(RootModel[List[User]]):
+class RepositorySubscribersResponse(RootModel[list[User]]):
     pass
 
-class RepositoryStargazersResponse(RootModel[List[User]]):
+class RepositoryStargazersResponse(RootModel[list[User]]):
     pass
 
-class RepositoryLanguagesResponse(RootModel[Dict[str, int]]):
+class RepositoryLanguagesResponse(RootModel[dict[str, int]]):
+    pass
+
+class RepositoryTopicsResponse(Topics):
+    pass
+
+class RepositoryReadmeResponse(ReadMe):
     pass
 
 class SearchUsersResponse(SearchUsers):
@@ -52,4 +70,7 @@ class SearchReposResponse(SearchRepositories):
     pass
 
 class GraphQLSearchUsersResponse(GraphQLSearchUsers):
+    pass
+
+class GraphQLResponse(RootModel[GraphQLData]):
     pass
