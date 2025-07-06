@@ -28,6 +28,7 @@ This project serves as a secure intermediary layer for GitHub data access in the
 - **Uvicorn**: An ASGI server to run the FastAPI application.
 - **Cachetools**: A caching library used to store frequently requested data to optimize performance and reduce load on the GitHub API.
 - **SlowAPI**: A FastAPI-compatible rate limiter used to prevent API abuse by restricting the number of requests per client.
+- **pydantic_settings**: A Library for settings management using Pydantic
 
 ## Installation
 
@@ -83,19 +84,56 @@ This project serves as a secure intermediary layer for GitHub data access in the
 
 ## Available Endpoints
 
-| Endpoint                                                      | Description                                     |
-| ------------------------------------------------------------- | ----------------------------------------------- |
-| `/repos/{user}/{repository}`                                  | Fetch details of a specific GitHub repository.  |
-| `/user/{user}`                                                | Get public profile info of a GitHub user.       |
-| `/user/{user}/repos`                                          | Get all public repositories of a GitHub user.   |
-| `/user/{user}/followers`                                      | List followers of a GitHub user.                |
-| `/search/users?q={user}&page={page}&per_page={limit}`         | Search GitHub users.                            |
-| `/search/repositories?q={query}&page={page}&per_page={limit}` | Search repositories.                            |
-| `/graphql/query` (POST)                                       | Submit GraphQL queries to GitHub's GraphQL API. |
-| `/graphql/searchUser` (POST)                                  | Search Github users with GraphQL API.           |
+| Method | Endpoint          | Description                                     |
+| -------|------------------ | ----------------------------------------------- |
+| GET    | `/repos`          | List repositories                               |
+| GET    | `/user`           | Get user info                                   |
+| GET    | `/search`         | Search GitHub users or repository.              |
+| POST   | `/graphql`        | Submit GraphQL queries to GitHub's GraphQL API. |
+
+<details>
+<summary>Click to expand full list</summary>
+
+### Repositories
+| Method | Endpoint                            | Description              |
+|--------|-------------------------------------|--------------------------|
+| GET    | `/repositories`                     | List public repositories |
+| GET    | `/repos/{user}/{repo}`              | Repo detail              |
+| GET    | `/repos/{user}/{repo}/stargazers`   | List repo stragazers     |
+| GET    | `/repos/{user}/{repo}/subscribers`  | List repo subscribers    |
+| GET    | `/repos/{user}/{repo}/contributors` | List repo contributors   |
+| GET    | `/repos/{user}/{repo}/branches`     | List repo branches       |
+| GET    | `/repos/{user}/{repo}/activity`     | List repo activity       |
+| GET    | `/repos/{user}/{repo}/pulls`        | List repo pulls          |
+| GET    | `/repos/{user}/{repo}/issues`       | List repo issues         |
+| GET    | `/repos/{user}/{repo}/languages`    | List repo languages      |
+| GET    | `/repos/{user}/{repo}/topics`       | List repo topics         |
+| GET    | `/repos/{user}/{repo}/readme`       | Repo readme detail       |
+
+### Users
+| Method | Endpoint                     | Description             |
+|--------|------------------------------|-------------------------|
+| GET    | `/users/{user}`              | Get user info           |
+| GET    | `/user/{user}/repos`         | List user repos         |
+| GET    | `/user/{user}/followers`     | List user followers     |
+| GET    | `/user/{user}/starred`       | List user starred repos |
+| GET    | `/user/{user}/events/public` | List user activity      |
+
+### Search
+| Method | Endpoint               | Description        |
+|--------|------------------------|--------------------|
+| GET    | `/search/users`        | Search Github user |
+| GET    | `/search/repositories` | Search repository  |
+
+### GraphQL
+| Method | Endpoint              | Description                            |
+|--------|-----------------------|----------------------------------------|
+| POST   | `/graphql/query`      | Request GitHub's GraphQL API           |
+| POST   | `/graphql/searchUser` | Search Github user with custom content |
+
+</details>
 
 > Interactive API documentation available at:
->
 > - Swagger UI: [`/docs`](http://localhost:8000/docs)
 > - ReDoc: [`/redoc`](http://localhost:8000/redoc)
 
