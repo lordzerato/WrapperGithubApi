@@ -1,12 +1,9 @@
 from pydantic import BaseModel
-from typing import Optional, List
-
-type AcceptedValue = str | int | float | bool | None
-type Variables = Optional[dict[str, AcceptedValue]]
+from .types import JSON, GraphQLVariables
 
 class PayloadGraphQL(BaseModel):
     query: str
-    variables: Variables
+    variables: GraphQLVariables
 
 class PayloadSearch(BaseModel):
     query: str
@@ -32,10 +29,13 @@ class Edge(BaseModel):
 class DataSearch(BaseModel):
     userCount: int
     pageInfo: PageInfo
-    edges: List[Edge]
+    edges: list[Edge]
 
 class Data(BaseModel):
     search: DataSearch
 
 class GraphQLSearchUsers(BaseModel):
     data: Data
+
+class GraphQLData(BaseModel):
+    data: JSON

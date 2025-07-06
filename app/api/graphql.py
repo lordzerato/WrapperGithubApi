@@ -1,12 +1,11 @@
 from fastapi import APIRouter, HTTPException
-from typing import Any
-from app.services.github_client import graphql_search_users, graphql_request
+from app.services.github_client.graphql import graphql_search_users, graphql_request
 from app.models.graphql import PayloadGraphQL, PayloadSearch
-from app.models.response_schema import GraphQLSearchUsersResponse
+from app.models.response_schema import GraphQLSearchUsersResponse, GraphQLResponse
 
 router = APIRouter(prefix="/graphql", tags=["graphql"])
 
-@router.post("/query", response_model=dict[str, Any])
+@router.post("/query", response_model=GraphQLResponse)
 async def graphql_query(payload: PayloadGraphQL):
     query = payload.query
     variables = payload.variables

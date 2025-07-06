@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import List
 from .user import User
 from .repository import RepositoryLong
 
@@ -12,9 +11,9 @@ class RepositoryFound(RepositoryLong):
 class SearchUsers(BaseModel):
     total_count: int
     incomplete_results: bool
-    items: List[UserFound]
+    items: list[UserFound]
 
 class SearchRepositories(BaseModel):
     total_count: int
     incomplete_results: bool
-    items: List[RepositoryFound]
+    items: list[RepositoryFound]

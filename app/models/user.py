@@ -1,5 +1,17 @@
 from pydantic import BaseModel
 
+class Author(BaseModel):
+    email: str | None
+    name: str | None
+
+class Actor(BaseModel):
+    avatar_url: str
+    display_login: str
+    gravatar_id: str
+    id: int
+    login: str
+    url: str
+
 class User(BaseModel):
     avatar_url: str
     events_url: str
@@ -21,17 +33,15 @@ class User(BaseModel):
     url: str
     user_view_type: str
 
-class Profile(User):
+class Profile(User, Author):
     bio: str | None
     blog: str | None
     company: str | None
     created_at: str
-    email: str | None
     followers: int
     following: int
     hireable: bool | None
     location: str | None
-    name: str | None
     public_gists: int
     public_repos: int
     twitter_username: str | None

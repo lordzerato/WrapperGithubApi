@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import Literal
-from app.services.github_client import get_search_users, get_search_repos
+from app.services.github_client.search import get_search_users, get_search_repos
 from app.models.response_schema import SearchUsersResponse, SearchReposResponse
 from app.utils.utils import join_query_params
 

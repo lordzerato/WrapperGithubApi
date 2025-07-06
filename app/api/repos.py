@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from typing import Literal
-from app.services.github_client import (
+from app.services.github_client.repos import (
     get_repo_details,
     get_repo_activity,
     get_repo_contributors,
@@ -10,7 +10,9 @@ from app.services.github_client import (
     get_repo_subscribers,
     get_repo_stargazers,
     get_repo_languages,
-    get_public_repositories
+    get_public_repositories,
+    get_repo_topics,
+    get_repo_readme
 )
 from app.models.response_schema import (
     RepositoriesResponse,
@@ -22,7 +24,9 @@ from app.models.response_schema import (
     RepositoryPullsResponse,
     RepositorySubscribersResponse,
     RepositoryStargazersResponse,
-    RepositoryLanguagesResponse
+    RepositoryLanguagesResponse,
+    RepositoryTopicsResponse,
+    RepositoryReadmeResponse
 )
 from app.utils.utils import join_query_params
 
@@ -161,15 +165,40 @@ async def repo_pulls(
     return await get_repo_pulls(username, repository, query_params)
 
 @router.get("/{username}/{repository}/subscribers", response_model=RepositorySubscribersResponse)
-async def repo_subscribers( username: str, repository: str, page: int = 1, per_page: int = 30):
+async def repo_subscribers(
+    username: str,
+    repository: str,
+    page: int = 1,
+    per_page: int = 30
+):
     query_params: str = join_query_params({"page": page, "per_page": per_page})
     return await get_repo_subscribers(username, repository, query_params)
 
 @router.get("/{username}/{repository}/stargazers", response_model=RepositoryStargazersResponse)
-async def repo_stargazers( username: str, repository: str, page: int = 1, per_page: int = 30):
+async def repo_stargazers(
+    username: str,
+    repository: str,
+    page: int = 1,
+    per_page: int = 30
+):
     query_params: str = join_query_params({"page": page, "per_page": per_page})
     return await get_repo_stargazers(username, repository, query_params)
 
 @router.get("/{username}/{repository}/languages", response_model=RepositoryLanguagesResponse)
 async def repo_languages( username: str, repository: str):
     return await get_repo_languages(username, repository)
+
+@router.get("/{username}/{repository}/topics", response_model=RepositoryTopicsResponse)
+async def repo_topics(
+    username: str,
+    repository: str,
+    page: int = 1,
+    per_page: int = 30
+):
+    query_params = join_query_params({"page": page, "per_page": per_page})
+    return await get_repo_topics(username, repository, query_params)
+
+@router.get("/{username}/{repository}/readme", response_model=RepositoryReadmeResponse)
+async def repo_readme(username: str, repository: str, ref: str | None = None):
+    query_params: str = join_query_params({"ref": ref})
+    return await get_repo_readme(username, repository, query_params)
