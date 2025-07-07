@@ -72,5 +72,5 @@ class SearchReposResponse(SearchRepositories):
 class GraphQLSearchUsersResponse(GraphQLSearchUsers):
     pass
 
-class GraphQLResponse(RootModel[GraphQLData]):
+class GraphQLResponse(GraphQLData):
     pass

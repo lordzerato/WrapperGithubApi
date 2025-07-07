@@ -1,5 +1,6 @@
-from typing import Any
+from typing import Any, Literal
 
-JSON = dict[str, Any]
+OBJECT = dict[str, Any]
 AcceptedValue = str | int | float | bool | None
-GraphQLVariables = dict[str, AcceptedValue | JSON | list[AcceptedValue | JSON]] | None
+JSON = dict[str, AcceptedValue | OBJECT | list[AcceptedValue | OBJECT]]
+Methods = Literal["GET", "POST", "PUT", "DELETE"]
