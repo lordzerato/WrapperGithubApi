@@ -22,7 +22,7 @@ async def search_users(
         "page": page,
         "per_page": per_page
     })
-    return await get_search_users(query_params)
+    return await get_search_users("users", query_params)
 
 @router.get("/repositories", response_model=SearchReposResponse)
 async def search_repos(
@@ -41,4 +41,4 @@ async def search_repos(
         "page": page,
         "per_page": per_page
     })
-    return await get_search_repos(query_params)
+    return await get_search_repos("repositories", query_params)

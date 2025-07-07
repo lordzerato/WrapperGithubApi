@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     AUTH_TOKEN: str | None = None
     GITHUB_API_URL: AnyHttpUrl = AnyHttpUrl("https://api.github.com/")
 
+    # Redis
+    REDIS_URL: str = ""
+
     # Middleware
     ALLOW_ORIGINS: list[str] = ["*"]
     ALLOW_METHODS: list[str] = ["GET", "POST"]
@@ -45,7 +48,7 @@ class Settings(BaseSettings):
     }
 
     # Logging
-    LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    LOGGING_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
 
     @field_validator("ALLOW_METHODS")
     @classmethod

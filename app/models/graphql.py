@@ -1,9 +1,9 @@
 from pydantic import BaseModel
-from .types import JSON, GraphQLVariables
+from .types import JSON
 
 class PayloadGraphQL(BaseModel):
     query: str
-    variables: GraphQLVariables
+    variables: JSON | None
 
 class PayloadSearch(BaseModel):
     query: str
@@ -38,4 +38,4 @@ class GraphQLSearchUsers(BaseModel):
     data: Data
 
 class GraphQLData(BaseModel):
-    data: JSON
+    data: JSON | None = None

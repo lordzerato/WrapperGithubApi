@@ -35,7 +35,7 @@ router = APIRouter(prefix="/repos", tags=["repos"])
 @router.get("itories", response_model=RepositoriesResponse)
 async def public_repositories(since: int | None = None):
     query_params: str = join_query_params({"since": since})
-    return await get_public_repositories(query_params)
+    return await get_public_repositories(f"repositories", query_params)
 
 @router.get("/", include_in_schema=False)
 async def root():
@@ -51,7 +51,7 @@ async def root_repository():
 
 @router.get("/{username}/{repository}", response_model=RepositoryDetailsResponse)
 async def repo_info(username: str, repository: str):
-    return await get_repo_details(username, repository)
+    return await get_repo_details(f"{username}/{repository}")
 
 @router.get("/{username}/{repository}/activity", response_model=RepositoryActivityResponse)
 async def repo_activity(
@@ -76,7 +76,7 @@ async def repo_activity(
         "time_periode": time_periode,
         "activity_type": activity_type
     })
-    return await get_repo_activity(username, repository, query_params)
+    return await get_repo_activity(f"{username}/{repository}/activity", query_params)
 
 @router.get("/{username}/{repository}/contributors", response_model=RepositoryContributorsResponse)
 async def repo_contributors(
@@ -91,7 +91,7 @@ async def repo_contributors(
         "per_page": per_page,
         "page": page
     })
-    return await get_repo_contributors(username, repository, query_params)
+    return await get_repo_contributors(f"{username}/{repository}/contributors", query_params)
 
 @router.get("/{username}/{repository}/branches", response_model=RepositoryBranchesResponse)
 async def repo_branches(
@@ -106,7 +106,7 @@ async def repo_branches(
         "per_page": per_page,
         "page": page
     })
-    return await get_repo_branches(username, repository, query_params)
+    return await get_repo_branches(f"{username}/{repository}/branches", query_params)
 
 @router.get("/{username}/{repository}/issues", response_model=RepositoryIssuesResponse)
 async def repo_issues(
@@ -139,7 +139,7 @@ async def repo_issues(
         "per_page": per_page,
         "page": page
     })
-    return await get_repo_issues(username, repository, query_params)
+    return await get_repo_issues(f"{username}/{repository}/issues", query_params)
 
 @router.get("/{username}/{repository}/pulls", response_model=RepositoryPullsResponse)
 async def repo_pulls(
@@ -162,7 +162,7 @@ async def repo_pulls(
         "page": page,
         "per_page": per_page
     })
-    return await get_repo_pulls(username, repository, query_params)
+    return await get_repo_pulls(f"{username}/{repository}/pulls", query_params)
 
 @router.get("/{username}/{repository}/subscribers", response_model=RepositorySubscribersResponse)
 async def repo_subscribers(
@@ -172,7 +172,7 @@ async def repo_subscribers(
     per_page: int = 30
 ):
     query_params: str = join_query_params({"page": page, "per_page": per_page})
-    return await get_repo_subscribers(username, repository, query_params)
+    return await get_repo_subscribers(f"{username}/{repository}/subscribers", query_params)
 
 @router.get("/{username}/{repository}/stargazers", response_model=RepositoryStargazersResponse)
 async def repo_stargazers(
@@ -182,11 +182,11 @@ async def repo_stargazers(
     per_page: int = 30
 ):
     query_params: str = join_query_params({"page": page, "per_page": per_page})
-    return await get_repo_stargazers(username, repository, query_params)
+    return await get_repo_stargazers(f"{username}/{repository}/stargazers", query_params)
 
 @router.get("/{username}/{repository}/languages", response_model=RepositoryLanguagesResponse)
 async def repo_languages( username: str, repository: str):
-    return await get_repo_languages(username, repository)
+    return await get_repo_languages(f"{username}/{repository}/languages")
 
 @router.get("/{username}/{repository}/topics", response_model=RepositoryTopicsResponse)
 async def repo_topics(
@@ -196,9 +196,9 @@ async def repo_topics(
     per_page: int = 30
 ):
     query_params = join_query_params({"page": page, "per_page": per_page})
-    return await get_repo_topics(username, repository, query_params)
+    return await get_repo_topics(f"{username}/{repository}/topics", query_params)
 
 @router.get("/{username}/{repository}/readme", response_model=RepositoryReadmeResponse)
 async def repo_readme(username: str, repository: str, ref: str | None = None):
     query_params: str = join_query_params({"ref": ref})
-    return await get_repo_readme(username, repository, query_params)
+    return await get_repo_readme(f"{username}/{repository}/readme", query_params)

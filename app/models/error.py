@@ -3,7 +3,7 @@ from app.models.types import JSON, AcceptedValue
 
 class RawErrorValidation(BaseModel):
     type: str
-    loc: tuple[str, str]
+    loc: tuple[str, ...]
     msg: str
     input: AcceptedValue | JSON
 

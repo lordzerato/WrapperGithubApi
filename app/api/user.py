@@ -28,7 +28,7 @@ async def root_users():
 
 @router.get("s/{username}", response_model=UsersDetailsResponse)
 async def user_info(username: str):
-    return await get_user_details(username)
+    return await get_user_details(f"{username}")
 
 @router.get("s/{username}/repos", response_model=UsersRepositoriesResponse)
 async def user_repos(
@@ -46,20 +46,19 @@ async def user_repos(
         "page": page,
         "per_page": per_page
     })
-    print(query_params)
-    return await get_user_repos(username, query_params)
+    return await get_user_repos(f"{username}/repos", query_params)
 
 @router.get("s/{username}/followers", response_model=UsersFollowersResponse)
 async def user_followers(username: str, page: int = 1, per_page: int = 30):
     query_params: str = join_query_params({"page": page, "per_page": per_page})
-    return await get_user_followers(username, query_params)
+    return await get_user_followers(f"{username}/followers", query_params)
 
 @router.get("s/{username}/starred", response_model=UsersStarredResponse)
 async def user_starred(username: str, page: int = 1, per_page: int = 30):
     query_params: str = join_query_params({"page": page, "per_page": per_page})
-    return await get_user_starred(username, query_params)
+    return await get_user_starred(f"{username}/starred", query_params)
 
 @router.get("s/{username}/events/public", response_model=UsersPublicEventsResponse)
 async def user_public_event(username: str, page: int = 1, per_page: int = 30):
     query_params: str = join_query_params({"page": page, "per_page": per_page})
-    return await get_user_public_event(username, query_params)
+    return await get_user_public_event(f"{username}/events/public", query_params)
