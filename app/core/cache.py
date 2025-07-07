@@ -41,6 +41,10 @@ async def redis_get(key: str):
         return None
     try:
         value = await redis_client.get(key)
+        if value is None:
+            return None
+        if isinstance(value, bytes):
+            value = value.decode("utf-8")
         return json.loads(value)
     except RedisError as e:
         logger.error(f"Could not retrieve key '{key}' from Redis: {e}")
