@@ -6,7 +6,6 @@ from app.models.response_schema import (
     UsersPublicEventsResponse
 )
 from .factory import make_fetcher
-# return an async function to fetch and validate based on the provided model and prefix
 
 get_user_details = make_fetcher(UsersDetailsResponse, "users")
 get_user_repos = make_fetcher(UsersRepositoriesResponse, "users")
