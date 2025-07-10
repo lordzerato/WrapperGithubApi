@@ -10,6 +10,7 @@ from app.core.logger import logger
 def reformat_error(
     exc: ValidationError | RequestValidationError, isValidation: bool = False
 ) -> list[FormattedErrorValidation]:
+    """Format exception error details."""
     errors: list[RawErrorValidation] = [
         RawErrorValidation.model_validate(error) for error in exc.errors()
     ]
@@ -32,10 +33,12 @@ def reformat_error(
     return formatted_errors
 
 def add_exception_handler(app: FastAPI):
+    """Configure application exception handlers."""
     @app.exception_handler(RateLimitExceeded)
     async def rate_limit_exception_handler(
         request: Request, exc: RateLimitExceeded
     ) -> JSONResponse:
+        """Handle rate limit exceeded errors."""
         return JSONResponse(
             status_code=429,
             content={"detail": "Rate limit exceeded, please try again later."}
@@ -45,12 +48,14 @@ def add_exception_handler(app: FastAPI):
     async def http_exception_handler(
         request: Request, exc: HTTPException
     ) -> JSONResponse:
+        """Handle HTTP exceptions."""
         return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
     @app.exception_handler(ValidationError)
     async def validation_exception_handler(
         request: Request, exc: ValidationError
     ) -> JSONResponse:
+        """Handle validation errors."""
         formatted_errors = reformat_error(exc, True)
         return JSONResponse(
             status_code=422, content={"detail": jsonable_encoder(formatted_errors)}
@@ -60,6 +65,7 @@ def add_exception_handler(app: FastAPI):
     async def request_validation_exception_handler(
         request: Request, exc: RequestValidationError
     ) -> JSONResponse:
+        """Handle request validation errors."""
         formatted_errors = reformat_error(exc)
         return JSONResponse(
             status_code=422, content={"detail": jsonable_encoder(formatted_errors)}
@@ -69,6 +75,7 @@ def add_exception_handler(app: FastAPI):
     async def general_exception_handler(
         request: Request, exc: Exception
     ) -> JSONResponse:
+        """Handle general exceptions."""
         logger.error(
             f"Unhandled exception for {request.method} {request.url.path}: {exc}",
             exc_info=True

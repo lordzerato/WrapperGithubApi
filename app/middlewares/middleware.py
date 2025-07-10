@@ -6,13 +6,15 @@ from slowapi.util import get_remote_address
 from slowapi.middleware import SlowAPIASGIMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from app.middlewares.other_middleware import (
-    ResponseTimeMiddleware, SecurityHeadersMiddleware
+    ResponseTimeMiddleware,
+    SecurityHeadersMiddleware
 )
 from app.core.config import settings
 
 limiter = Limiter(key_func=get_remote_address, default_limits=[settings.RATE_LIMIT])
 
 def add_middleware(app: FastAPI):
+    """Configure application middleware."""
     app.state.__setattr__("limiter", limiter)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts = settings.ALLOWED_HOSTS)
     app.add_middleware(

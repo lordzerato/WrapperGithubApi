@@ -1,20 +1,20 @@
 import re
-from typing import Literal
-from pydantic import field_validator, AnyHttpUrl
+from typing import get_args
+from pydantic import field_validator, HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-pattern = r"^(?!0)\d+/(second|minute|hour|day|month|year)$"
-type_methods: list[str] = ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
-props_headers: list[str] = ["CSP", "STRICT_TRANSPORT_SECURITY", "PERMISSION_POLICY", "REFERRER_POLICY", "X_CONTENT_TYPE_OPTIONS", "X_FRAME_OPTIONS"]
-required_csp: list[str] = ["default-src", "script-src", "style-src", "img-src", "font-src", "worker-src", "connect-src"]
+from app.models.types import Methods, PropsHeaders, RequiredCsp, Pattern, LogLevel
 
 class Settings(BaseSettings):
     # GithubAPI
     AUTH_TOKEN: str | None = None
-    GITHUB_API_URL: AnyHttpUrl = AnyHttpUrl("https://api.github.com/")
+    GITHUB_API_URL: HttpUrl = HttpUrl("https://api.github.com/")
 
     # Redis
     REDIS_URL: str = ""
+    # Kafka
+    KAFKA_SERVER: str = ""
+    # Logging
+    LOGGING_LEVEL: LogLevel = "INFO"
 
     # Middleware
     ALLOW_ORIGINS: list[str] = ["*"]
@@ -47,21 +47,18 @@ class Settings(BaseSettings):
         "X_FRAME_OPTIONS": "DENY"
     }
 
-    # Logging
-    LOGGING_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
-
     @field_validator("ALLOW_METHODS")
     @classmethod
     def validate_allow_methods(cls, value: list[str]) -> list[str]:
         for method in value:
-            if method not in type_methods:
+            if method.upper() not in get_args(Methods):
                 raise ValueError(f"Invalid method: {method}")
         return value
 
     @field_validator("RATE_LIMIT")
     @classmethod
     def validate_rate_limit(cls, value: str) -> str:
-        if re.fullmatch(pattern, value):
+        if re.fullmatch(Pattern, value):
             return value
         raise ValueError("Invalid RATE_LIMIT format (expected: <number>/(minute|second|hour))")
 
@@ -76,11 +73,11 @@ class Settings(BaseSettings):
     @classmethod
     def validate_headers(cls, value: dict[str, str]) -> dict[str, str]:
         for key, val in value.items():
-            if key not in props_headers:
+            if key not in PropsHeaders:
                 raise ValueError(f"Invalid header key: {key}")
             match key:
                 case "CSP":
-                    missing = [props for props in required_csp if props not in val.split(" ")]
+                    missing = [props for props in RequiredCsp if props not in val.split(" ")]
                     if missing:
                         raise ValueError(f"Missing required CSP properties: {', '.join(missing)}")
                 case "REFERRER_POLICY":

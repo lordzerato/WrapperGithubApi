@@ -27,6 +27,7 @@ except RedisError as e:
     logger.error(f"Failed to initialize Redis client: {e}. Redis cache will be disabled.")
 
 async def redis_set(key: str, value: Any, ttl: int = 3600):
+    """Set redis value of key with ttl"""
     if not redis_client:
         return False
     try:
@@ -37,6 +38,7 @@ async def redis_set(key: str, value: Any, ttl: int = 3600):
         return False
 
 async def redis_get(key: str):
+    """Get redis value of key"""
     if not redis_client:
         return None
     try:
@@ -51,6 +53,7 @@ async def redis_get(key: str):
         return None
 
 async def redis_delete(key: str):
+    """Delete redis value of key"""
     if not redis_client:
         return
     try:
@@ -68,6 +71,7 @@ def use_cachetools_hybrid(
     [Callable[..., Coroutine[Any, Any, Any]]],
     Callable[..., Coroutine[Any, Any, T]]
 ]:
+    """Decorator for get and set hybrid cache."""
     def decorator(
         func: Callable[..., Coroutine[Any, Any, Any]]
     ) -> Callable[..., Coroutine[Any, Any, T]]:

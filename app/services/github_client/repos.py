@@ -13,7 +13,6 @@ from app.models.response_schema import (
     RepositoryReadmeResponse
 )
 from .factory import make_fetcher
-# return an async function to fetch and validate based on the provided model and prefix
 
 get_public_repositories = make_fetcher(RepositoriesResponse, "repos", False)
 get_repo_details = make_fetcher(RepositoryDetailsResponse, "repos")
