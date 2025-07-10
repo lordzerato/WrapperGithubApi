@@ -18,6 +18,7 @@ This project serves as a secure intermediary layer for GitHub data access in the
 - Secure headers via middleware to prevent Clickjacking, XSS, and insecure redirects
 - Built-in caching using `cachetools`
 - OpenAPI and ReDoc auto-generated documentation at `/docs` and `/redoc`
+- `docker-compose.yml` to assist local development by provisioning Redis, Redpanda, Redpanda Console, Prometheus, and Grafana services.
 
 ## Technologies Used
 
@@ -28,7 +29,9 @@ This project serves as a secure intermediary layer for GitHub data access in the
 - **Uvicorn**: An ASGI server to run the FastAPI application.
 - **Cachetools**: A caching library used to store frequently requested data to optimize performance and reduce load on the GitHub API.
 - **SlowAPI**: A FastAPI-compatible rate limiter used to prevent API abuse by restricting the number of requests per client.
-- **pydantic_settings**: A Library for settings management using Pydantic
+- **pydantic_settings**: A library for managing application configuration using Pydantic models.
+- **redis**: A caching solution used to store frequently accessed data externally, helping to improve performance and minimize load on the GitHub API.
+- **aiokafka**: An asynchronous client library for producing and consuming messages with Kafka.
 
 ## Installation
 
@@ -64,15 +67,31 @@ This project serves as a secure intermediary layer for GitHub data access in the
    pip install -r requirements.txt
    ```
 
-5. Set up environment variables
+5. (Optional) If you have Docker installed, you can spin up the services using `docker-compose.yml`:
+   
+   
+   if docker compose version v2
+   ```bash
+   docker compose up -d
+   ```
+
+   or
+   ```bash
+   docker-compose up -d
+   ```
+
+6. Set up environment variables
 
    Create a `.env` file in the project root directory based on the provided `.env.example`:
 
    ```env
-   AUTH_TOKEN=your_github_token
+   AUTH_TOKEN=your_github_token         # Optional
+   REDIS_URL=redis://localhost:6379     # Optional
+   KAFKA_SERVER=localhost:19092         # Optional
+   LOGGING_LEVEL=INFO                   # DEBUG for full logging
    ```
 
-6. Run the application
+7. Run the application
 
    Start the FastAPI app using Uvicorn:
 
@@ -136,6 +155,9 @@ This project serves as a secure intermediary layer for GitHub data access in the
 > Interactive API documentation available at:
 > - Swagger UI: [`/docs`](http://localhost:8000/docs)
 > - ReDoc: [`/redoc`](http://localhost:8000/redoc)
+> - Redpanda console: [localhost:8080](localhost:8080)
+> - Prometheus: [localhost:9090](localhost:9090)
+> - Grafana: [localhost:3000](localhost:3000)
 
 ## Usage Example
 
